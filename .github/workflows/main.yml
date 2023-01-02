@@ -25,10 +25,12 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run 'build prod' --if-present
-      - uses: montudor/action-zip@v1
-        with:
-          args: zip -qq -r explorer.zip .
-          working-directory: dist
+      - name: Install zip
+        uses: montudor/action-zip@v1
+
+      - run: zip -qq -r explorer.zip .
+        working-directory: dist
+
       - uses: actions/upload-artifact@v3
         with:
           name: explorer.zip
