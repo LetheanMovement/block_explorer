@@ -27,7 +27,7 @@ jobs:
       - run: npm run 'build prod' --if-present
       - uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r explorer.zip dist/*
+          args: zip -qq -r explorer.zip . -i dist/*
       - uses: actions/upload-artifact@v3
         with:
           name: explorer.zip
