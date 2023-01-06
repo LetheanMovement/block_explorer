@@ -41,19 +41,21 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: utils/docker/Dockerfile
-          cache-to: ghcr.io/letheanvpn/block-explorer:testnet-${{ github.ref_name }}
-          cache-from: ghcr.io/letheanvpn/block-explorer:testnet-${{ github.ref_name }}
+          file: Dockerfile
+          target: frontend
+          cache-to: ghcr.io/letheanvpn/block-explorer-frontend:testnet-${{ github.ref_name }}
+          cache-from: ghcr.io/letheanvpn/block-explorer-frontend:testnet-${{ github.ref_name }}
           push: true
-          tags: lthn/block-explorer:testnet-${{ github.ref_name }},ghcr.io/letheanvpn/block-explorer:testnet-${{ github.ref_name }}
+          tags: lthn/block-explorer-frontend:testnet-${{ github.ref_name }},ghcr.io/letheanvpn/block-explorer-frontend:testnet-${{ github.ref_name }}
       - name: Docker Build
         if: ${{ github.event_name == 'pull_request' }}
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: utils/docker/Dockerfile
-          cache-to: ghcr.io/letheanvpn/block-explorer:testnet-${{ github.head_ref }}
-          cache-from: ghcr.io/letheanvpn/block-explorer:testnet-${{ github.head_ref }}
+          file: Dockerfile
+          target: frontend
+          cache-to: ghcr.io/letheanvpn/block-explorer-frontend:testnet-${{ github.head_ref }}
+          cache-from: ghcr.io/letheanvpn/block-explorer-frontend:testnet-${{ github.head_ref }}
           push: true
-          tags: lthn/block-explorer:testnet-${{ github.head_ref }},ghcr.io/letheanvpn/block-explorer:testnet-${{ github.head_ref }}
+          tags: lthn/block-explorer-frontend:testnet-${{ github.head_ref }},ghcr.io/letheanvpn/block-explorer-frontend:testnet-${{ github.head_ref }}
 
