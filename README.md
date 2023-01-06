@@ -8,7 +8,7 @@ ___
 
 ## Obtain the source
 ```
-git clone https://github.com/hyle-team/block_explorer.git && cd block_explorer
+git clone https://github.com/letheanVPN/block_explorer.git && cd block_explorer
 ```
 
 #### Install the NodeJS dependencies for the Backend and Frontend
