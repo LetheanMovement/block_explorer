@@ -14,9 +14,11 @@ const { rows } = require('pg/lib/defaults')
 let config = fs.readFileSync('config.json', 'utf8')
 config = JSON.parse(config)
 const api = config.api + '/json_rpc'
+const wallet = `${config.auditable_wallet.api}/json_rpc`
 const server_port = config.server_port
 const frontEnd_api = config.frontEnd_api
 let enabled_during_sync = config.websocket.enabled_during_sync
+let enable_Visibility_Info = config.enableVisibilityInfo
 let maxCount = 1000
 let lastBlock = {
     height: -1,
@@ -540,7 +542,7 @@ app.get('/search_by_id/:id', async (req, res) => {
                         if (response.data.result) {
                             res.send(JSON.stringify({ result: 'tx' }))
                         } else {
-                            rows = db
+                            let rows = db
                                 .prepare(
                                     "SELECT * FROM aliases WHERE enabled == 1 AND (alias LIKE '%?%' OR address LIKE '%?%' OR comment LIKE '%?%') ORDER BY block DESC limit ? offset ?"
                                 )
@@ -1177,27 +1179,32 @@ async function syncAltBlocks() {
 }
 
 const getTxPoolDetails = async (count) => {
-    if (count === 0) {
-        let result = await db.query('SELECT blob_size, fee, id, timestamp, false as "isNew" FROM pool ORDER BY timestamp DESC;')
-        return result && result.rowCount > 0 ? result.rows : []  
-    }
+    try {
 
-    const query = {
-        text: 'SELECT blob_size, fee, id, timestamp, false as "isNew" FROM pool ORDER BY timestamp DESC limit $1;',
-        values: [count ? count : 500]
+        if (count === 0) {
+            let result = await db.query('SELECT blob_size, fee, id, timestamp, false as "isNew" FROM pool ORDER BY timestamp DESC;')
+            return result && result.rowCount > 0 ? result.rows : []
+        }
+
+        const query = {
+            text: 'SELECT blob_size, fee, id, timestamp, false as "isNew" FROM pool ORDER BY timestamp DESC limit $1;',
+            values: [count ? count : 500]
+        }
+        let result = await db.query(query)
+        // let a = [{blob_size: 10, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2542a", timestamp: "1652919533"},
+        // {blob_size: 11, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2542a", timestamp: "1652919533"},
+        // {blob_size: 12, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2542b", timestamp: "1652919533"},
+        // {blob_size: 13, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2542c", timestamp: "1652919533"},
+        // {blob_size: 14, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2542d", timestamp: "1652919533"},
+        // {blob_size: 15, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2542e", timestamp: "1652919533"},
+        // {blob_size: 16, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2542f", timestamp: "1652919533"},
+        // {blob_size: 17, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2543a", timestamp: "1652919533"},
+        // {blob_size: 18, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2543b", timestamp: "1652919533"},
+        // {blob_size: 19, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2543c", timestamp: "1652919533"}]
+        return result && result.rowCount > 0 ? result.rows : []
+    }catch (e) {
+        return []
     }
-    let result = await db.query(query)
-    // let a = [{blob_size: 10, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2542a", timestamp: "1652919533"},
-    // {blob_size: 11, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2542a", timestamp: "1652919533"},
-    // {blob_size: 12, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2542b", timestamp: "1652919533"},
-    // {blob_size: 13, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2542c", timestamp: "1652919533"},
-    // {blob_size: 14, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2542d", timestamp: "1652919533"},
-    // {blob_size: 15, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2542e", timestamp: "1652919533"},
-    // {blob_size: 16, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2542f", timestamp: "1652919533"},
-    // {blob_size: 17, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2543a", timestamp: "1652919533"},
-    // {blob_size: 18, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2543b", timestamp: "1652919533"},
-    // {blob_size: 19, fee: 10000000000, id:"734e0acf588a051abe774e766f611606096d401a7cd4623bdfad7ad57bc2543c", timestamp: "1652919533"}]
-    return result && result.rowCount > 0 ? result.rows : []
     // return a
 }
 
@@ -1209,44 +1216,46 @@ const getVisibilityInfo = async () => {
         unlocked_balance: 0
     }
     try {
-        const [res1, res2, res3] = await axios.all([
-            getbalance(),
-            get_mining_history(),
-            get_info()
-        ])
-        result.balance = res1.data.result.balance
-        result.unlocked_balance = res1.data.result.unlocked_balance
+        if (enable_Visibility_Info) {
+            const [res1, res2, res3] = await axios.all([
+                getbalance(),
+                get_mining_history(),
+                get_info()
+            ])
+            result.balance = res1.data.result.balance
+            result.unlocked_balance = res1.data.result.unlocked_balance
 
-        let totalStakedCoins7Days = new BigNumber(720 * 7 * 1000000000000)
-        let stakedCoinsLast7Days = new BigNumber(0)
-        if ('mined_entries' in res2.data.result) {
-            for (const item of res2.data.result.mined_entries) {
-                stakedCoinsLast7Days = stakedCoinsLast7Days.plus(item.a)
+            let totalStakedCoins7Days = new BigNumber(720 * 7 * 1000000000000)
+            let stakedCoinsLast7Days = new BigNumber(0)
+            if ('mined_entries' in res2.data.result) {
+                for (const item of res2.data.result.mined_entries) {
+                    stakedCoinsLast7Days = stakedCoinsLast7Days.plus(item.a)
+                }
             }
+
+            result.amount = stakedCoinsLast7Days.toNumber()
+
+            let totalCoinsInvolvedInStaking =
+                stakedCoinsLast7Days.isEqualTo(0)
+                    ? new BigNumber(0)
+                    : new BigNumber(result.balance)
+                        .multipliedBy(
+                            totalStakedCoins7Days.dividedBy(stakedCoinsLast7Days)
+                        )
+
+            let totalSupply = new BigNumber(res3.data.result.total_coins)
+
+            // console.log('wallet balance ', result.balance)
+            // console.log('staked coins 7 days ', stakedCoinsLast7Days.toNumber())
+            // console.log('totalCoinsInvolvedInStaking ', new BigNumber(result.balance)
+            //         .multipliedBy(
+            //         totalStakedCoins7Days.dividedBy(stakedCoinsLast7Days)
+            //         ).toNumber())
+            // console.log('totalSupply ', totalSupply.toNumber())
+            // console.log('percentage', totalCoinsInvolvedInStaking.dividedBy(totalSupply).multipliedBy(100).toNumber())
+
+            result.percentage = totalCoinsInvolvedInStaking.dividedBy(totalSupply).multipliedBy(100).toFixed(4)
         }
-
-        result.amount = stakedCoinsLast7Days.toNumber()
-        
-        let totalCoinsInvolvedInStaking =
-        stakedCoinsLast7Days.isEqualTo(0)
-        ? new BigNumber(0)
-        : new BigNumber(result.balance)
-        .multipliedBy(
-            totalStakedCoins7Days.dividedBy(stakedCoinsLast7Days)
-            )
-                    
-        let totalSupply = new BigNumber(res3.data.result.total_coins)
-        
-        // console.log('wallet balance ', result.balance)
-        // console.log('staked coins 7 days ', stakedCoinsLast7Days.toNumber())
-        // console.log('totalCoinsInvolvedInStaking ', new BigNumber(result.balance)
-        //         .multipliedBy(
-        //         totalStakedCoins7Days.dividedBy(stakedCoinsLast7Days)
-        //         ).toNumber())
-        // console.log('totalSupply ', totalSupply.toNumber())
-        // console.log('percentage', totalCoinsInvolvedInStaking.dividedBy(totalSupply).multipliedBy(100).toNumber())
-
-        result.percentage = totalCoinsInvolvedInStaking.dividedBy(totalSupply).multipliedBy(100).toFixed(4)
     } catch (error) {
         log('getVisibilityInfo() ERROR', error)
     }
@@ -1275,7 +1284,7 @@ async function getInfoTimer() {
                     .prepare('SELECT COUNT(*) AS transactions FROM pool')
                     .get()
                 let countTrPoolDB = 0
-                if (rows) 
+                if (rows)
                     countTrPoolDB = rows.transactions
                 if (countTrPoolDB !== countTrPoolServer) {
                     log(
@@ -1322,7 +1331,7 @@ async function getInfoTimer() {
             await delay(10000)
             await getInfoTimer()
         } catch (error) {
-            log('getInfoTimer() get_info error')
+            log(`getInfoTimer() get_info ${error}`)
             blockInfo.daemon_network_state = 0
             await delay(300000)
             await getInfoTimer()
