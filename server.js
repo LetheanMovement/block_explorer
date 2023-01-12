@@ -17,6 +17,7 @@ const api = config.api + '/json_rpc'
 const wallet = `${config.auditable_wallet.api}/json_rpc`
 const server_port = config.server_port
 const frontEnd_api = config.frontEnd_api
+const frontEnd_html = config.frontEnd_html
 let enabled_during_sync = config.websocket.enabled_during_sync
 let enable_Visibility_Info = config.enableVisibilityInfo
 let maxCount = 1000
@@ -57,7 +58,7 @@ io.engine.on('headers', (headers, req) => {
     headers['Access-Control-Allow-Origin'] = frontEnd_api
 })
 
-app.use(express.static('dist'))
+app.use(express.static(frontEnd_html))
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*')
     res.header(

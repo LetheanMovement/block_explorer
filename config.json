@@ -1,6 +1,7 @@
 {
     "api": "http://testnet.lethean.io:31211",
     "frontEnd_api": "*",
+    "frontEnd_html": "../public_html",
     "server_port": "8008",
     "auditable_wallet": {
         "api": "http://testnet.lethean.io:12233"
