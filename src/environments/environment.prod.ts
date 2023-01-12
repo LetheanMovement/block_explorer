@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
-    backend: 'http://testnet.lethean.io:8008',
+    backend: 'http://explorer.lt.hn:8008',
     documentionApi: 'https://docs.lethean.io',
     decimalPlaces: 2,
     transactionPoolLimit: 5,

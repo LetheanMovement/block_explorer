@@ -11,5 +11,5 @@ export const environment = {
     transactionPoolLimit: 5,
     initialChartLoadDelayMs: 5000,
     frequencyOfChartRefreshingMs: 3600000,
-    enableVisibilityInfo: false
+    enableVisibilityInfo: true
 }
