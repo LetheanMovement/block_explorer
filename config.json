@@ -1,17 +1,17 @@
 {
-    "api": "http://10.0.0.13:11211",
+    "api": "http://testnet.lethean.io:31211",
     "frontEnd_api": "*",
     "server_port": "8008",
     "auditable_wallet": {
-        "api": "http://10.0.0.13:12233"
+        "api": "http://testnet.lethean.io:12233"
     },
     "websocket": {
         "enabled_during_sync": false
     },
     "enableVisibilityInfo": true,
     "database": {
-        "user": "zano",
-        "host": "10.0.0.13",
+        "user": "lthn",
+        "host": "127.0.0.1",
         "port": 5432,
         "database": "db",
         "password": "123456"

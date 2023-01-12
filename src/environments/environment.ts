@@ -5,11 +5,11 @@
 
 export const environment = {
     production: false,
-    backend: 'https://zano.smartcoinpool.net',
-    documentionApi: 'https://docs.zano.org',
+    backend: 'http://localhost:8008',
+    documentionApi: 'https://docs.lethean.io',
     decimalPlaces: 2,
     transactionPoolLimit: 5,
     initialChartLoadDelayMs: 5000,
     frequencyOfChartRefreshingMs: 3600000,
-    enableVisibilityInfo: true
+    enableVisibilityInfo: false
 }

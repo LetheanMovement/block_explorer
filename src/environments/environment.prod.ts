@@ -1,7 +1,7 @@
 export const environment = {
     production: true,
-    backend: 'http://178.62.212.9',
-    documentionApi: 'https://docs.zano.org',
+    backend: 'http://testnet.lethean.io:8008',
+    documentionApi: 'https://docs.lethean.io',
     decimalPlaces: 2,
     transactionPoolLimit: 5,
     initialChartLoadDelayMs: 5000,
