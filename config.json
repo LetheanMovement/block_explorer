@@ -14,7 +14,7 @@
         "user": "lthn-explorer",
         "host": "127.0.0.1",
         "port": 5432,
-        "database": "db",
+        "database": "lthn-explorer",
         "password": "ifthisisanissuetheissueisnotthatthisisknown"
     }
 }
