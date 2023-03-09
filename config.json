@@ -1,5 +1,5 @@
 {
-    "api": "https://explorer.dev.lthn.network:31211",
+    "api": "http://explorer.dev.lthn.network:31211",
     "frontEnd_api": "*",
     "frontEnd_html": "./public_html",
     "server_port": "8008",
