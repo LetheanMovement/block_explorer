@@ -1352,7 +1352,7 @@ app.get(
 )
 
 app.use(function (req, res) {
-    res.sendFile(__dirname + '/dist/index.html')
+    res.sendFile(__dirname + `/${config.frontEnd_html}/index.html`)
 })
 
 io.on('connection', async (socket) => {
