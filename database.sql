@@ -1,5 +1,5 @@
--- DROP DATABASE IF EXISTS db;
--- CREATE DATABASE db;
+-- DROP DATABASE IF EXISTS lthn-explorer;
+-- CREATE DATABASE lthn-explorer;
 
 CREATE TABLE IF NOT EXISTS  blocks (
         height  integer primary key,
@@ -196,22 +196,22 @@ END;
 $$;
 
 
-GRANT EXECUTE ON PROCEDURE purge() TO zano;
+GRANT EXECUTE ON PROCEDURE purge() TO lthn-explorer;
 
-GRANT EXECUTE ON PROCEDURE purgeaboveheight(p_height integer) TO zano;
+GRANT EXECUTE ON PROCEDURE purgeaboveheight(p_height integer) TO lthn-explorer;
 
-GRANT EXECUTE ON PROCEDURE update_statistics(p_startheight integer) TO zano;
+GRANT EXECUTE ON PROCEDURE update_statistics(p_startheight integer) TO lthn-explorer;
 
-GRANT ALL ON TABLE aliases TO zano;
+GRANT ALL ON TABLE aliases TO lthn-explorer;
 
-GRANT ALL ON TABLE alt_blocks TO zano;
+GRANT ALL ON TABLE alt_blocks TO lthn-explorer;
 
-GRANT ALL ON TABLE blocks TO zano;
+GRANT ALL ON TABLE blocks TO lthn-explorer;
 
-GRANT ALL ON TABLE charts TO zano;
+GRANT ALL ON TABLE charts TO lthn-explorer;
 
-GRANT ALL ON TABLE out_info TO zano;
+GRANT ALL ON TABLE out_info TO lthn-explorer;
 
-GRANT ALL ON TABLE pool TO zano;
+GRANT ALL ON TABLE pool TO lthn-explorer;
 
-GRANT ALL ON TABLE transactions TO zano;
+GRANT ALL ON TABLE transactions TO lthn-explorer;
