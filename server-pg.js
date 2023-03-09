@@ -56,7 +56,7 @@ io.engine.on('headers', (headers, req) => {
     headers['Access-Control-Allow-Origin'] = frontEnd_api
 })
 
-app.use(express.static('dist'))
+app.use(express.static(config.frontEnd_html))
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*')
     res.header(
